@@ -12,7 +12,7 @@
 <h2 style="text-align: center; color:red;">Edit Laptop</h2>
 <div  class="row" style="display:block; text-align: center;"> 
     <div >
-        <img style=" height: 100% " src="<c:url value="/laptops/${laptop.id}.jpg"/>" alt=" nuhuh"/>
+        <img style=" height: 100% " src="<c:url value="/laptops/${laptop.id}.png"/>" alt=" nuhuh"/>
 
     </div>
     <div style="display:block;  margin:0; padding:10px">
@@ -21,11 +21,11 @@
             <input type="text" disabled="" name="id" value="${laptop.id}"><br>
             <input type="hidden" name="id" value="${laptop.id}">
             Brand: <br>
-            
+            <input type="text" name="brand" value="${param.brand!=null?param.brand:laptop.brand}"><br>
             Description:<br>
             <input type="text" name="description" value="${param.description!=null?param.description:laptop.description}"><br>
             Price:<br>
-            <input type="text" name="price" value="${param.price!=null?param.price:laptop.price}"><br>
+            <input type="number" name="price" value="${param.price!=null?param.price:laptop.formattedPrice}" min="0"> đ<br>
             <button type="submit" value="edit" name="op">Confirm</button>
             <button type="submit" value="cancel" name="op">Cancel</button>
         </form>

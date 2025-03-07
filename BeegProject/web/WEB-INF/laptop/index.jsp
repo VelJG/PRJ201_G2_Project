@@ -32,7 +32,6 @@
                     <div style="margin-top: 20px;">
                         <a href="<c:url value="/laptop/detail.do?id=${laptop.id}" />" class="btn " style="background-color: blue; color:white ">View detail</a>  
                     </div>
-                    <!--<a href="<c:url value="/laptop/edit.do?id=${laptop.id}"/>">Edit</a>-->
                 </div>
             </div>
 

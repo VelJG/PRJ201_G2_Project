@@ -5,6 +5,8 @@
  */
 package db;
 
+import java.text.DecimalFormat;
+
 /**
  *
  * @author AN KHUONG
@@ -48,6 +50,10 @@ public class Laptop {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    public String getFormattedPrice() {
+        DecimalFormat df = new DecimalFormat("#0.00"); 
+        return df.format(price);
     }
    
            
