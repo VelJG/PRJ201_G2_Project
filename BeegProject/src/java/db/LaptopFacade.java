@@ -21,7 +21,7 @@ public class LaptopFacade {
 
     public List<Laptop> select() throws SQLException {
         List<Laptop> list = null;
-        try ( 
+        try (
                 Connection con = DBContext.getConnection()) {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("select * from Laptop");
@@ -41,7 +41,7 @@ public class LaptopFacade {
 
     public List<Laptop> select(int page, int pageSize) throws SQLException {
         List<Laptop> list = null;
-        try ( 
+        try (
                 Connection con = DBContext.getConnection()) {
             PreparedStatement stm = con.prepareStatement("select * from Laptop order by id offset ? rows fetch next ? rows only ");
             stm.setInt(1, (page - 1) * pageSize);
@@ -62,9 +62,9 @@ public class LaptopFacade {
     }
 
     public Laptop select(int id) throws SQLException {
-        
+
         try (
-            Connection con = DBContext.getConnection()) {
+                Connection con = DBContext.getConnection()) {
             PreparedStatement stm = con.prepareStatement("select * from Laptop where id=?");
             stm.setInt(1, id);
             ResultSet rs = stm.executeQuery();
@@ -92,9 +92,7 @@ public class LaptopFacade {
         return row_count;
     }
 
-   
     public void edit(Laptop laptop) throws SQLException {
-
         Connection con = DBContext.getConnection();
         PreparedStatement ps = con.prepareStatement("update Laptop set description=?, price=?, brand=? where id=?");
         ps.setString(1, laptop.getDescription());
@@ -104,5 +102,22 @@ public class LaptopFacade {
         int count = ps.executeUpdate();
         con.close();
 
+    }
+
+    public void delete(int id) throws SQLException {
+        Connection con = DBContext.getConnection();
+        PreparedStatement ps = con.prepareStatement("delete from Laptop where id=?");
+        ps.setInt(1, id);
+        int count = ps.executeUpdate();
+        con.close();
+    }
+     public void create(Laptop laptop) throws SQLException {
+        Connection con = DBContext.getConnection();
+        PreparedStatement ps = con.prepareStatement("insert Laptop values (?,?,?)");
+        ps.setString(1, laptop.getDescription());
+        ps.setDouble(2, laptop.getPrice());
+        ps.setString(3, laptop.getBrand());
+        int count = ps.executeUpdate();
+        con.close();
     }
 }

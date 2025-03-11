@@ -19,15 +19,18 @@
         </div>
     </div>
 </div>
+
+    <a href="<c:url value="/laptop/create.do"/>" class="btn btn-primary">Create</a>
+
 <div class="row" >
     <c:forEach var="laptop" items="${list}"> 
         <div class="col-sm-3 laptopContainer"> 
             <div class="laptop">
                 <img class="laptopImg"src="<c:url value="/laptops/${laptop.id}.png"/>" alt=" nuhuh"/>
                 <div class="laptopInfo">
-                   
 
-                   
+
+
                     <span style="color:red; font-weight: 600; font-size: larger"><fmt:formatNumber value="${laptop.price}" type="currency"/></span><br>
                     <div style="margin-top: 20px;">
                         <a href="<c:url value="/laptop/detail.do?id=${laptop.id}" />" class="btn " style="background-color: blue; color:white ">View detail</a>  
