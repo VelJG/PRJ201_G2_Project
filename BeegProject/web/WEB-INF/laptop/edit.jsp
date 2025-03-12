@@ -22,6 +22,8 @@
             <input type="hidden" name="id" value="${laptop.id}">
             Brand: <br>
             <input type="text" name="brand" value="${param.brand!=null?param.brand:laptop.brand}"><br>
+           Model: <br>
+            <input type="text" name="model" value="${param.model!=null?param.model:laptop.model}"><br>
             Description:<br>
             <input type="text" name="description" value="${param.description!=null?param.description:laptop.description}"><br>
             Price:<br>

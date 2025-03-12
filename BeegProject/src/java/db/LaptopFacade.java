@@ -32,6 +32,7 @@ public class LaptopFacade {
                 laptop.setDescription(rs.getString("description"));
                 laptop.setPrice(rs.getDouble("price"));
                 laptop.setBrand(rs.getString("brand"));
+                laptop.setModel(rs.getString("model"));
                 list.add(laptop);
             }
             con.close();
@@ -54,6 +55,7 @@ public class LaptopFacade {
                 laptop.setDescription(rs.getString("description"));
                 laptop.setPrice(rs.getDouble("price"));
                 laptop.setBrand(rs.getString("brand"));
+                laptop.setModel(rs.getString("model"));
                 list.add(laptop);
             }
             con.close();
@@ -74,6 +76,7 @@ public class LaptopFacade {
                 laptop.setDescription(rs.getString("description"));
                 laptop.setPrice(rs.getDouble("price"));
                 laptop.setBrand(rs.getString("brand"));
+                laptop.setModel(rs.getString("model"));
             }
             con.close();
             return laptop;
@@ -94,30 +97,87 @@ public class LaptopFacade {
 
     public void edit(Laptop laptop) throws SQLException {
         Connection con = DBContext.getConnection();
-        PreparedStatement ps = con.prepareStatement("update Laptop set description=?, price=?, brand=? where id=?");
-        ps.setString(1, laptop.getDescription());
-        ps.setDouble(2, laptop.getPrice());
-        ps.setString(3, laptop.getBrand());
-        ps.setInt(4, laptop.getId());
-        int count = ps.executeUpdate();
+        PreparedStatement stm = con.prepareStatement("update Laptop set description=?, price=?, brand=?, model=? where id=?");
+        stm.setString(1, laptop.getDescription());
+        stm.setDouble(2, laptop.getPrice());
+        stm.setString(3, laptop.getBrand());
+        stm.setString(4, laptop.getModel());
+        stm.setInt(5, laptop.getId());
+        int count = stm.executeUpdate();
         con.close();
 
     }
 
     public void delete(int id) throws SQLException {
         Connection con = DBContext.getConnection();
-        PreparedStatement ps = con.prepareStatement("delete from Laptop where id=?");
-        ps.setInt(1, id);
-        int count = ps.executeUpdate();
+        PreparedStatement stm = con.prepareStatement("delete from Laptop where id=?");
+        stm.setInt(1, id);
+        int count = stm.executeUpdate();
         con.close();
     }
-     public void create(Laptop laptop) throws SQLException {
+
+    public void create(Laptop laptop) throws SQLException {
         Connection con = DBContext.getConnection();
-        PreparedStatement ps = con.prepareStatement("insert Laptop values (?,?,?)");
-        ps.setString(1, laptop.getDescription());
-        ps.setDouble(2, laptop.getPrice());
-        ps.setString(3, laptop.getBrand());
-        int count = ps.executeUpdate();
+        PreparedStatement stm = con.prepareStatement("insert Laptop values (?,?,?,?)");
+        stm.setString(1, laptop.getBrand());
+        stm.setString(2, laptop.getModel());
+        stm.setDouble(3, laptop.getPrice());
+        stm.setString(4, laptop.getDescription());
+        int count = stm.executeUpdate();
         con.close();
+    }
+
+    public List<Laptop> search(String search) throws SQLException {
+        List<Laptop> list = new ArrayList<>();
+        Connection con = DBContext.getConnection();
+        PreparedStatement stm = con.prepareStatement("select * from Laptop where model LIKE ? OR brand LIKE ?");
+        stm.setString(1, "%" + search + "%");
+        stm.setString(2, "%" + search + "%");
+        ResultSet rs = stm.executeQuery();
+        while (rs.next()) {
+            Laptop laptop = new Laptop();
+            laptop.setId(rs.getInt("id"));
+            laptop.setBrand(rs.getString("brand"));
+            laptop.setModel(rs.getString("model"));
+            laptop.setPrice(rs.getDouble("price"));
+            list.add(laptop);
+        }
+
+        return list;
+    }
+
+    public List<Laptop> priceDesc(int page, int pageSize) throws SQLException {
+        List<Laptop> list = new ArrayList<>();
+        Connection con = DBContext.getConnection();
+        PreparedStatement stm = con.prepareStatement("select * from Laptop order by price desc offset ? rows fetch next ? rows only");
+        stm.setInt(1, (page - 1) * pageSize);
+        stm.setInt(2, pageSize);
+        ResultSet rs = stm.executeQuery();
+        while (rs.next()) {
+            Laptop laptop = new Laptop();
+            laptop.setId(rs.getInt("id"));
+            laptop.setBrand(rs.getString("brand"));
+            laptop.setModel(rs.getString("model"));
+            laptop.setPrice(rs.getDouble("price"));
+            list.add(laptop);
+        }
+        return list;
+    }
+    public List<Laptop> priceAsc(int page, int pageSize) throws SQLException {
+        List<Laptop> list = new ArrayList<>();
+        Connection con = DBContext.getConnection();
+        PreparedStatement stm = con.prepareStatement("select * from Laptop order by price asc offset ? rows fetch next ? rows only");
+        stm.setInt(1, (page - 1) * pageSize);
+        stm.setInt(2, pageSize); 
+        ResultSet rs = stm.executeQuery();
+        while (rs.next()) {
+            Laptop laptop = new Laptop();
+            laptop.setId(rs.getInt("id"));
+            laptop.setBrand(rs.getString("brand"));
+            laptop.setModel(rs.getString("model"));
+            laptop.setPrice(rs.getDouble("price"));
+            list.add(laptop);
+        }
+        return list;
     }
 }

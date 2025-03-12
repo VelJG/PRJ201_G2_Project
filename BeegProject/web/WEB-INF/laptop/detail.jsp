@@ -19,12 +19,13 @@
                 ID: ${laptop.id}<br>
             </c:if>
             Brand: ${laptop.brand} <br>
+            Model: ${laptop.model} <br>
             Description: ${laptop.description} <br>
             Price: <fmt:formatNumber value="${laptop.price}" type="currency"/>
             <a href="<c:url value="/cart/add.do?id=${laptop.id}"/>" class="btn btn-lg " style="background-color: lightgreen"><i class="bi bi-cart-plus"></i> Add to cart</a>
             <c:if test="${account.role=='ADMIN'}">
                 <a href="<c:url value="/laptop/edit.do?id=${laptop.id}"/>" class="btn">Edit</a>
-                <a href="javascript:void(0);" class="btn btn-danger" onclick="confirmDelete('<c:url value="/laptop/delete.do?id=${laptop.id}"/>')">Delete</a>
+                <a class="btn btn-danger" onclick="confirmDelete('<c:url value="/laptop/delete.do?id=${laptop.id}"/>')">Delete</a>
                 <script>
                     function confirmDelete(url) {
                         if (confirm("Are you sure you want to delete this laptop?")) {

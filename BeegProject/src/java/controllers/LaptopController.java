@@ -23,15 +23,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import javax.servlet.annotation.MultipartConfig;
+
 /**
  *
  * @author AN KHUONG
  */
 @WebServlet(name = "LaptopController", urlPatterns = {"/laptop"})
 @MultipartConfig(
-    fileSizeThreshold = 1024 * 1024 * 2,  
-    maxFileSize = 1024 * 1024 * 10,      
-    maxRequestSize = 1024 * 1024 * 50    
+        fileSizeThreshold = 1024 * 1024 * 2,
+        maxFileSize = 1024 * 1024 * 10,
+        maxRequestSize = 1024 * 1024 * 50
 )
 public class LaptopController extends HttpServlet {
 
@@ -88,8 +89,30 @@ public class LaptopController extends HttpServlet {
                 page = Integer.parseInt(spage);
             }
             session.setAttribute("page", page);
-            List<Laptop> list = lf.select(page, pageSize);
+            List<Laptop> list = null;
+            String search = request.getParameter("search");
+
+            if (search == null || search.trim().isEmpty()) {
+                String sort = request.getParameter("sort");
+
+                if (sort != null) {
+                    switch (sort) {
+                        case "desc":
+                            list = lf.priceDesc(page, pageSize);
+                            break;
+                        case "asc":
+                            list = lf.priceAsc(page, pageSize);
+                            break;
+                    }
+                } else {
+                    list = lf.select(page, pageSize);
+                }
+            } else {
+                list = lf.search(search);
+                request.setAttribute("search", search);
+            }
             request.setAttribute("list", list);
+
             int row_count = lf.count();
             int totalPage = (int) Math.ceil((double) row_count / pageSize);
             request.setAttribute("totalPage", totalPage);
@@ -140,10 +163,12 @@ public class LaptopController extends HttpServlet {
                     String description = request.getParameter("description");
                     double price = Double.parseDouble(request.getParameter("price"));
                     String brand = request.getParameter("brand");
+                    String model = request.getParameter("model");
                     laptop.setId(id);
                     laptop.setBrand(brand);
                     laptop.setDescription(description);
                     laptop.setPrice(price);
+                    laptop.setModel(model);
                     lf.edit(laptop);
                 case "cancel":
                     request.getRequestDispatcher("/laptop/index.do").forward(request, response);
@@ -178,22 +203,19 @@ public class LaptopController extends HttpServlet {
     protected void create_handler(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            System.out.println("Received parameters:");
-            request.getParameterMap().forEach((key, value) -> System.out.println(key + " = " + value[0]));
-
             String op = request.getParameter("op");
-            if (op == null) {
-                System.out.println("This shit is null");
-            }
+
             switch (op) {
                 case "create":
                     Laptop laptop = new Laptop();
                     String description = request.getParameter("description");
                     double price = Double.parseDouble(request.getParameter("price"));
                     String brand = request.getParameter("brand");
+                    String model = request.getParameter("model");
                     laptop.setBrand(brand);
                     laptop.setDescription(description);
                     laptop.setPrice(price);
+                    laptop.setModel(model);
                     lf.create(laptop);
                 case "cancel":
                     request.getRequestDispatcher("/laptop/index.do").forward(request, response);
@@ -237,7 +259,6 @@ public class LaptopController extends HttpServlet {
 //}
 //   
 //   
-
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -263,11 +284,9 @@ public class LaptopController extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    
-}
-    
-    
+            throws ServletException, IOException {
+
+    }
 
     /**
      * Returns a short description of the servlet.

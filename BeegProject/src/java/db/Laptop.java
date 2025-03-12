@@ -14,7 +14,16 @@ import java.text.DecimalFormat;
 public class Laptop {
    private int id;
    private String brand;
+   private String model;
    private double price;
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
    private String description;
 
     public Laptop() {
