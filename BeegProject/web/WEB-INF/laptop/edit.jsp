@@ -20,6 +20,8 @@
             Id:<br>
             <input type="text" disabled="" name="id" value="${laptop.id}"><br>
             <input type="hidden" name="id" value="${laptop.id}">
+           Name: <br>
+            <input type="text" name="name" value="${param.name!=null?param.name:laptop.name}"><br>
             Brand: <br>
             <input type="text" name="brand" value="${param.brand!=null?param.brand:laptop.brand}"><br>
            Model: <br>

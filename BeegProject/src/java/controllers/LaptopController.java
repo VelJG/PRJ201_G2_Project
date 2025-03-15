@@ -29,11 +29,7 @@ import javax.servlet.annotation.MultipartConfig;
  * @author AN KHUONG
  */
 @WebServlet(name = "LaptopController", urlPatterns = {"/laptop"})
-@MultipartConfig(
-        fileSizeThreshold = 1024 * 1024 * 2,
-        maxFileSize = 1024 * 1024 * 10,
-        maxRequestSize = 1024 * 1024 * 50
-)
+@MultipartConfig
 public class LaptopController extends HttpServlet {
 
     private final LaptopFacade lf = new LaptopFacade();
@@ -72,6 +68,9 @@ public class LaptopController extends HttpServlet {
             case "detail":
                 detail(request, response);
                 break;
+            case "uploadImage":
+                uploadImage(request, response);
+                break;
         }
     }
 
@@ -94,8 +93,7 @@ public class LaptopController extends HttpServlet {
 
             if (search == null || search.trim().isEmpty()) {
                 String sort = request.getParameter("sort");
-
-                if (sort != null) {
+                if (sort != null && !sort.isEmpty()) {
                     switch (sort) {
                         case "desc":
                             list = lf.priceDesc(page, pageSize);
@@ -164,11 +162,13 @@ public class LaptopController extends HttpServlet {
                     double price = Double.parseDouble(request.getParameter("price"));
                     String brand = request.getParameter("brand");
                     String model = request.getParameter("model");
+                    String name = request.getParameter("name");
                     laptop.setId(id);
                     laptop.setBrand(brand);
                     laptop.setDescription(description);
                     laptop.setPrice(price);
                     laptop.setModel(model);
+                    laptop.setName(name);
                     lf.edit(laptop);
                 case "cancel":
                     request.getRequestDispatcher("/laptop/index.do").forward(request, response);
@@ -204,7 +204,6 @@ public class LaptopController extends HttpServlet {
             throws ServletException, IOException {
         try {
             String op = request.getParameter("op");
-
             switch (op) {
                 case "create":
                     Laptop laptop = new Laptop();
@@ -212,13 +211,15 @@ public class LaptopController extends HttpServlet {
                     double price = Double.parseDouble(request.getParameter("price"));
                     String brand = request.getParameter("brand");
                     String model = request.getParameter("model");
+                    String name = request.getParameter("name");
                     laptop.setBrand(brand);
                     laptop.setDescription(description);
                     laptop.setPrice(price);
                     laptop.setModel(model);
+                    laptop.setName(name);
                     lf.create(laptop);
                 case "cancel":
-                    request.getRequestDispatcher("/laptop/index.do").forward(request, response);
+                    request.getRequestDispatcher("/laptop/uploadImage.do").forward(request, response);
                     break;
             }
 
@@ -227,38 +228,12 @@ public class LaptopController extends HttpServlet {
         }
     }
 
-//    private void upload_image(HttpServletRequest request, HttpServletResponse response)
-//        throws ServletException, IOException {
-//        
-//    try {
-//        Part filePart = request.getPart("file");
-//        if (filePart == null || filePart.getSize() <= 0) {
-//            throw new IllegalArgumentException("No file uploaded.");
-//        }
-//
-//        String uploadPath = getServletContext().getRealPath("/laptops");
-//        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-//        File file = new File(uploadPath, fileName);
-//
-//        try (InputStream fileContent = filePart.getInputStream();
-//             FileOutputStream outputStream = new FileOutputStream(file)) {
-//            byte[] buffer = new byte[1024];
-//            int bytesRead;
-//            while ((bytesRead = fileContent.read(buffer)) != -1) {
-//                outputStream.write(buffer, 0, bytesRead);
-//            }
-//        }
-//
-//        // Prevent infinite loop by redirecting instead of forwarding
-//        response.sendRedirect("/success.jsp");
-//
-//    } catch (Exception ex) {
-//        ex.printStackTrace();
-//        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "File upload failed.");
-//    }
-//}
-//   
-//   
+    protected void uploadImage(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
+    }
+
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -285,6 +260,27 @@ public class LaptopController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String uploadPath = getServletContext().getRealPath("/laptops").replace("\\build", "");
+        try {
+            Part filePart = request.getPart("file"); // Get the uploaded file part
+            if (filePart != null && filePart.getSize() > 0) {
+                String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+                if (!fileName.isEmpty()) {
+                    String filePath = uploadPath + File.separator + lf.getNextId() + ".png";
+                    filePart.write(filePath);
+                    request.setAttribute("message", "File uploaded successfully to " + filePath);
+                } else {
+                    request.setAttribute("message", "Invalid file name.");
+                }
+            } else {
+                request.setAttribute("message", "No file selected or empty file.");
+            }
+        } catch (Exception ex) {
+            request.setAttribute("message", "File upload failed: " + ex.getMessage());
+        }
+      response.sendRedirect(request.getContextPath() + "/laptop/index.do");
+
+
 
     }
 

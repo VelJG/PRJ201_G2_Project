@@ -55,6 +55,9 @@ public class CartController extends HttpServlet {
             case "update":
                 update(request, response);
                 break;
+            case "checkout":
+                checkout(request, response);
+                break;
         }
     }
 
@@ -108,6 +111,25 @@ public class CartController extends HttpServlet {
         cart.update(id, quantity);
         request.getRequestDispatcher("/cart/index.do").forward(request, response);
 
+    }
+
+    protected void checkout(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            HttpSession session = request.getSession();
+            Cart cart = (Cart) session.getAttribute("cart");
+            Account account = (Account) session.getAttribute("account");
+            if (account == null) {
+                response.sendRedirect(request.getContextPath() + "/cart/index.do?login=1");
+            } else {
+                cart.checkout(account.getId());
+                cart.empty();
+                response.sendRedirect(request.getContextPath() + "?alert=1");
+            }
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

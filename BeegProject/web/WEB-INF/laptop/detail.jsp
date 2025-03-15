@@ -12,12 +12,13 @@
     <div class="row detail">
 
         <div class="col-sm-6">
-            <img src="<c:url value="/laptops/${laptop.id}.png" />">
+            <img src="<c:url value="/laptops/${laptop.id}.png" />" style="width: 80%; height: auto;">
         </div>
         <div class="col-sm-6 laptopDetail">
             <c:if test="${account.role=='ADMIN'}">
                 ID: ${laptop.id}<br>
             </c:if>
+            Name: ${laptop.name} <br>
             Brand: ${laptop.brand} <br>
             Model: ${laptop.model} <br>
             Description: ${laptop.description} <br>

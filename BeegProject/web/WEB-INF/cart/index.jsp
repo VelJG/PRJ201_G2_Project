@@ -48,13 +48,10 @@
     </tr>
 </table>
         <a href="<c:url value="/cart/checkout.do"/>">Check out</a>
-    
     <script>
         $(".update").click(function(){
-//            Lấy id + quantity
            var id=$(this).data("id");
            var quantity = $(this).closest("tr").find("input[name='quantity']").val();
-//           `` để lấy giá có biến khác, \${id} dể lấy biến
            var url = `<c:url value="/cart/update.do?id=\${id}&quantity=\${quantity}" />`;
            window.location=url;
         });

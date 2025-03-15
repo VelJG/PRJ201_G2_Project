@@ -14,31 +14,22 @@ import java.util.List;
  * @author PHT
  */
 public class OrderHeader {
+
     private int id;
-    private Date date;
+    private int accountId;
+    private Date orderDate;
+    private double totalPrice;
     private String status;
-    private int customerId;
-    private int employeeId;
     private List<OrderDetail> details = null;
 
+    public OrderHeader(int accountId, Date orderDate, double totalPrice, String status) {
+        this.accountId = accountId;
+        this.orderDate = orderDate;
+        this.totalPrice = totalPrice;
+        this.status = status;
+    }
+
     public OrderHeader() {
-        this.details = new ArrayList<>();
-    }
-
-    public OrderHeader(Date date, String status, int customerId, int employeeId) {
-        this.date = date;
-        this.status = status;
-        this.customerId = customerId;
-        this.employeeId = employeeId;
-        this.details = new ArrayList<>();
-    }
-
-    public OrderHeader(int id, Date date, String status, int customerId, int employeeId) {
-        this.id = id;
-        this.date = date;
-        this.status = status;
-        this.customerId = customerId;
-        this.employeeId = employeeId;
         this.details = new ArrayList<>();
     }
 
@@ -50,12 +41,28 @@ public class OrderHeader {
         this.id = id;
     }
 
-    public Date getDate() {
-        return date;
+    public int getAccountId() {
+        return accountId;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
+    }
+
+    public Date getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(Date orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public double getTotalPrice() {
+        totalPrice = 0;
+        for (OrderDetail detail : details) {
+            totalPrice += detail.getTotalPrice();
+        }
+        return totalPrice;
     }
 
     public String getStatus() {
@@ -66,31 +73,16 @@ public class OrderHeader {
         this.status = status;
     }
 
-    public int getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
-    }
-
-    public int getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
-    }        
-
     public List<OrderDetail> getDetails() {
         return details;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public void setDetails(List<OrderDetail> details) {
         this.details = details;
     }
-    
-    public void add(OrderDetail orderDetail){
-        this.details.add(orderDetail);
-    }
+
 }

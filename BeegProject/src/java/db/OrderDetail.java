@@ -12,54 +12,43 @@ import java.util.Date;
  * @author PHT
  */
 public class OrderDetail {
-    private int id;
-    private int orderHeaderId;
-    private int productId;
+    private String id;
+    private String orderHeaderId;
+    private int laptopId;
     private int quantity;
     private double price;
-    private double discount;
 
-    public OrderDetail() {
-    }
-
-    public OrderDetail(int productId, int quantity, double price, double discount) {
-        this.productId = productId;
-        this.quantity = quantity;
-        this.price = price;
-        this.discount = discount;
-    }
-
-    public OrderDetail(int id, int orderHeaderId, int productId, int quantity, double price, double discount) {
+    public OrderDetail(String id, String orderHeaderId, int laptopId, int quantity, double price) {
         this.id = id;
         this.orderHeaderId = orderHeaderId;
-        this.productId = productId;
+        this.laptopId = laptopId;
         this.quantity = quantity;
         this.price = price;
-        this.discount = discount;
     }
+    
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public int getOrderHeaderId() {
+    public String getOrderHeaderId() {
         return orderHeaderId;
     }
 
-    public void setOrderHeaderId(int orderHeaderId) {
+    public void setOrderHeaderId(String orderHeaderId) {
         this.orderHeaderId = orderHeaderId;
     }
 
-    public int getProductId() {
-        return productId;
+    public int getLaptopId() {
+        return laptopId;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
+    public void setLaptopId(int laptopId) {
+        this.laptopId = laptopId;
     }
 
     public int getQuantity() {
@@ -77,13 +66,10 @@ public class OrderDetail {
     public void setPrice(double price) {
         this.price = price;
     }
-
-    public double getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(double discount) {
-        this.discount = discount;
-    }
-        
+    
+    public double getTotalPrice(){
+    
+    return price*quantity;
+}
+    
 }

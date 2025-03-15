@@ -19,49 +19,43 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         
-        <title>JSP Page</title>
+        <title>LaptopEmporium</title>
     </head>
     <body>
         <div class="container">
-            <div class="row">
-                <div class="col-sm-12 header">
-                    <a href="<c:url value="/"/>" ><img src="<c:url value="/laptops/logo.png"/>" class="logo"></a></h1> 
-                <div>
-                        <c:if test="${account==null}">
-                             <a href="" class="btn " data-bs-toggle="modal" data-bs-target="#loginModal">Login</a> 
-                        </c:if>
-                              <c:if test="${account!=null}">
-                                  <span class="btn"> Welcome ${account.fullName}</span> |
-                                  <a href="<c:url value="/account/logout.do"/>" class="btn ">Logout</a> 
-                        </c:if>
-                        |
-                        <a href="<c:url value="/cart/index.do"/> " class="btn">
-                            <c:if test="${cart.total==0}">
-                                <i class="bi bi-cart"></i> 
-                            </c:if>
-
-                            <c:if test="${cart.total!=0}">
-                                <i class="bi bi-cart-fill"></i>
-                            </c:if>
-                            <fmt:formatNumber value="${cart.total}" type="currency"/>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="col-sm-12">
-                    <!--Content-->
-                    <jsp:include page="/WEB-INF/${controller}/${action}.jsp"></jsp:include>
-                </div>
-
-
-                <div class="col-sm-12 footer">
-
-                    <p style="text-align:center">Copyrights &copy; by Group 2 <i class="bi bi-emoji-sunglasses"></i><p/>
-                </div>
-            </div>     
+<div class="d-flex justify-content-between align-items-center py-3 border-bottom bg-light">
+        <a href="<c:url value='/'/>">
+            <img src="<c:url value='/laptops/logo.png'/>" alt="Shop Logo" class="logo">
+        </a>
+   
+        <div>
+            <c:if test="${account == null}">
+                <a href="#" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+            </c:if>
+            <c:if test="${account != null}">
+                <span class="btn btn-secondary">Welcome, ${account.fullName}</span> |
+                <a href="<c:url value='/account/logout.do'/>" class="btn btn-danger">Logout</a>
+            </c:if>
+            |
+            <a href="<c:url value='/cart/index.do'/>" class="btn btn-outline-dark">
+                <c:if test="${cart.total == 0}">
+                    <i class="bi bi-cart"></i>
+                </c:if>
+                <c:if test="${cart.total != 0}">
+                    <i class="bi bi-cart-fill"></i>
+                </c:if>
+                <fmt:formatNumber value="${cart.total}" type="currency"/>
+            </a>
         </div>
+    </div>
 
-        <!--Footer-->
+    <div class="row my-3">
+        <jsp:include page="/WEB-INF/${controller}/${action}.jsp"></jsp:include>
+    </div>
+</div>
+
+
+       
 
     </body>
 </html>

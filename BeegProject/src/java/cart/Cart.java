@@ -66,6 +66,33 @@ public class Cart {
         if(item.getQuantity()<1)
             remove(id);
     }
+    
+    public void checkout(int accountId) throws ClassNotFoundException, SQLException {
+    Date date = new Date();
+    String status = "NEW"; 
+    OrderHeader orderHeader = new OrderHeader();
+    orderHeader.setOrderDate(date);
+    orderHeader.setStatus(status);
+    orderHeader.setAccountId(accountId);
+    
+    for (Item item : this.getItems()) {
+        OrderDetail orderDetail = new OrderDetail(
+            null, // OrderDetail ID (assumed to be auto-generated in the DB)
+            null, // OrderHeader ID (will be set after insertion)
+            item.getLaptop().getId(), 
+            item.getQuantity(), 
+            item.getLaptop().getPrice() 
+        );
+        orderHeader.getDetails().add(orderDetail);
+    }
+    
+  
+    OrderHeaderFacade orderHeaderFacade = new OrderHeaderFacade();
+    orderHeaderFacade.insert(orderHeader);
+    
+ 
+    this.empty();
+}
   
 
 }
