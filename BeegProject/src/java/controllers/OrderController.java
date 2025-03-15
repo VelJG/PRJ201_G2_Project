@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import db.OrderDetail;
 import db.OrderHeader;
 import db.OrderHeaderFacade;
 import java.io.IOException;
@@ -41,6 +42,12 @@ public class OrderController extends HttpServlet {
             case "index":
                 index(request, response);
                 break;
+            case "detail":
+                detail(request, response);
+                break;
+            case "delete":
+                delete(request, response);
+                break;
         }
     }
 
@@ -48,10 +55,40 @@ public class OrderController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
-
-            List<OrderHeader> orders = oh.getOrders();
+            int accountId=Integer.parseInt(request.getParameter("id"));
+            List<OrderHeader> orders = oh.getOrders(accountId);
             request.setAttribute("orders", orders);
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    protected void detail(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try {
+
+            int id = Integer.parseInt(request.getParameter("id"));
+            List<OrderDetail> detail = oh.getDetailById(id);
+            request.setAttribute("detail", detail);
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+    protected void delete(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try {
+
+            int id = Integer.parseInt(request.getParameter("id"));
+            oh.remove(id);
+            request.getRequestDispatcher("/order/index.do").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();

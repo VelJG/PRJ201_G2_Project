@@ -12,6 +12,7 @@ import java.util.Date;
  * @author PHT
  */
 public class OrderDetail {
+
     private String id;
     private String orderHeaderId;
     private int laptopId;
@@ -25,7 +26,6 @@ public class OrderDetail {
         this.quantity = quantity;
         this.price = price;
     }
-    
 
     public String getId() {
         return id;
@@ -66,10 +66,9 @@ public class OrderDetail {
     public void setPrice(double price) {
         this.price = price;
     }
-    
-    public double getTotalPrice(){
-    
-    return price*quantity;
-}
-    
+
+    public double getTotalPrice() {
+        return price * quantity;
+    }
+
 }

@@ -5,6 +5,7 @@
  */
 package db;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,14 +58,18 @@ public class OrderHeader {
         this.orderDate = orderDate;
     }
 
-    public double getTotalPrice() {
-        totalPrice = 0;
+    public double getCalculatedPrice() {
+        double total = 0;
         for (OrderDetail detail : details) {
-            totalPrice += detail.getTotalPrice();
+            total += detail.getTotalPrice();
         }
-        return totalPrice;
+        return total;
     }
 
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+    
     public String getStatus() {
         return status;
     }
@@ -83,6 +88,10 @@ public class OrderHeader {
 
     public void setDetails(List<OrderDetail> details) {
         this.details = details;
+    }
+   public String getFormattedPrice() {
+        DecimalFormat df = new DecimalFormat("#0.00"); 
+        return df.format(totalPrice);
     }
 
 }

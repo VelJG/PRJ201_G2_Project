@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderHeaderFacade {
-
+    
     public void insert(OrderHeader orderHeader) throws ClassNotFoundException, SQLException {
         Connection con = DBContext.getConnection();
         try {
@@ -20,20 +20,17 @@ public class OrderHeaderFacade {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 stm.setInt(1, orderHeader.getAccountId());
                 stm.setString(2, sdf.format(orderHeader.getOrderDate()));
-                stm.setDouble(3, orderHeader.getTotalPrice());
+                stm.setDouble(3, orderHeader.getCalculatedPrice());
                 stm.setString(4, orderHeader.getStatus());
                 int count = stm.executeUpdate();
-                // Retrieve the generated ID
                 try (ResultSet rs = stm.getGeneratedKeys()) {
                     if (rs.next()) {
-                        orderHeader.setId(rs.getInt(1)); // Set the auto-generated ID
+                        orderHeader.setId(rs.getInt(1));
                     } else {
                         throw new SQLException("Inserting order failed, no ID obtained.");
                     }
                 }
             }
-
-            // Insert into OrderDetail using the generated orderHeaderId
             String insertOrderDetailSQL = "INSERT OrderDetail VALUES (?, ?, ?, ?)";
             try (PreparedStatement stm = con.prepareStatement(insertOrderDetailSQL)) {
                 for (OrderDetail orderDetail : orderHeader.getDetails()) {
@@ -44,12 +41,10 @@ public class OrderHeaderFacade {
                     stm.executeUpdate();
                 }
             }
-
-            // Commit the transaction
             con.commit();
         } catch (SQLException ex) {
             try {
-                con.rollback(); // Rollback on error
+                con.rollback();
             } catch (SQLException ex1) {
                 throw ex1;
             }
@@ -58,70 +53,60 @@ public class OrderHeaderFacade {
             con.close(); // Ensure connection is closed
         }
     }
-
-    public OrderHeader getOrderById(int orderId) throws SQLException, ClassNotFoundException {
-        OrderHeader orderHeader = null;
+    
+    public List<OrderDetail> getDetailById(int orderHeaderId) throws SQLException, ClassNotFoundException {
         Connection con = DBContext.getConnection();
-
-        try {
-            // Fetch OrderHeader
-            String sql = "SELECT * FROM OrderHeader WHERE id = ?";
-            try (PreparedStatement ps = con.prepareStatement(sql)) {
-                ps.setInt(1, orderId);
-                ResultSet rs = ps.executeQuery();
-                if (rs.next()) {
-                    orderHeader = new OrderHeader();
-                    orderHeader.setId(rs.getInt("id"));
-                    orderHeader.setAccountId(rs.getInt("accountId"));
-                    orderHeader.setOrderDate(rs.getDate("orderDate"));
-                    orderHeader.setTotalPrice(rs.getDouble("totalPrice"));
-                    orderHeader.setStatus(rs.getString("status"));
-                }
-            }
-
-            if (orderHeader != null) {
-                // Fetch OrderDetails
-                String detailSql = "SELECT * FROM OrderDetail WHERE orderHeaderId = ?";
-                List<OrderDetail> details = new ArrayList<>();
-                try (PreparedStatement ps = con.prepareStatement(detailSql)) {
-                    ps.setInt(1, orderId);
-                    ResultSet rs = ps.executeQuery();
-                    while (rs.next()) {
-                        OrderDetail detail = new OrderDetail(
-                                rs.getString("id"),
-                                rs.getString("orderHeaderId"),
-                                rs.getInt("laptopId"),
-                                rs.getInt("quantity"),
-                                rs.getDouble("price")
-                        );
-                        details.add(detail);
-                    }
-                }
-                orderHeader.setDetails(details);
-            }
-
-        } finally {
-            con.close();
+        List<OrderDetail> details = new ArrayList<>();
+        PreparedStatement stm = con.prepareStatement("SELECT * FROM OrderDetail WHERE orderHeaderId = ?");
+        stm.setInt(1, orderHeaderId);
+        ResultSet rs = stm.executeQuery();
+        while (rs.next()) {
+            OrderDetail detail = new OrderDetail(
+                    rs.getString("id"),
+                    rs.getString("orderHeaderId"),
+                    rs.getInt("laptopId"),
+                    rs.getInt("quantity"),
+                    rs.getDouble("price")
+            );
+            details.add(detail);
         }
-
-        return orderHeader;
+        return details;
     }
-
-    public List<OrderHeader> getOrders() throws SQLException, ClassNotFoundException {
+    
+    public List<OrderHeader> getOrders(int accountId) throws SQLException, ClassNotFoundException {
         List<OrderHeader> orders = new ArrayList<>();
         Connection con = DBContext.getConnection();
-        PreparedStatement ps = con.prepareStatement("SELECT * FROM OrderHeader");
-                ResultSet rs = ps.executeQuery();
-                while (rs.next()) {
-                    OrderHeader order = new OrderHeader();
-                    order.setId(rs.getInt("id"));
-                    order.setAccountId(rs.getInt("accountId"));
-                    order.setOrderDate(rs.getDate("orderDate"));
-                    order.setTotalPrice(rs.getDouble("totalPrice"));
-                    order.setStatus(rs.getString("status"));
-                    orders.add(order);
-                }
+        PreparedStatement stm = null;
+        if (accountId == 1) {
+            stm = con.prepareStatement("SELECT * FROM OrderHeader");
+        } else {
+            stm = con.prepareStatement("SELECT * FROM OrderHeader where accountId=?");
+            stm.setInt(1, accountId);
+        }
+        ResultSet rs = stm.executeQuery();
+        while (rs.next()) {
+            OrderHeader order = new OrderHeader();
+            order.setId(rs.getInt("id"));
+            order.setAccountId(rs.getInt("accountId"));
+            order.setOrderDate(rs.getDate("orderDate"));
+            order.setTotalPrice(rs.getDouble("totalPrice"));
+            order.setStatus(rs.getString("status"));
+            orders.add(order);
+        }
         return orders;
     }
-
+    
+    public void remove(int orderHeaderId) throws SQLException {
+        Connection con = DBContext.getConnection();
+        PreparedStatement stm = con.prepareStatement("delete from OrderDetail where orderHeaderId=?");
+        stm.setInt(1, orderHeaderId);
+        stm.executeUpdate();
+        stm.close();
+        
+        stm = con.prepareStatement("delete from OrderHeader where id=?");
+        stm.setInt(1, orderHeaderId);
+        stm.executeUpdate();
+        stm.close();
+    }
+    
 }

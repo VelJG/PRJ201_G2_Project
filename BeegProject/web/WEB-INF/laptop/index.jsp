@@ -25,10 +25,11 @@
     <c:if test="${account.role=='ADMIN'}">
         <a href="<c:url value='/laptop/create.do'/>" class="btn btn-success my-3">Add New Laptop</a>
     </c:if>
-        <a href="<c:url value='/order/index.do'/>" class="btn btn-outline-dark">
+    <c:if test="${not empty account}">
+        <a href="<c:url value='/order/index.do?id=${account.id}'/>" class="btn btn-outline-dark">
                 View order
             </a>
-
+    </c:if>
     <div class="row">
         <c:if test="${empty list}">
             <div class="text-center text-danger fs-5">No laptops found.</div>
