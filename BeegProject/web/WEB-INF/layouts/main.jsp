@@ -18,51 +18,58 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        
+
         <title>LaptopEmporium</title>
     </head>
     <body>
-        <div class="container">
-<div class="d-flex justify-content-between align-items-center py-3 border-bottom bg-light">
-        <a href="<c:url value='/'/>">
-            <img src="<c:url value='/laptops/logo.png'/>" alt="Shop Logo" class="logo">
-        </a>
-   
-        <div>
-            <c:if test="${account == null}">
-                <a href="#" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
-            </c:if>
-            <c:if test="${account != null}">
-                <span class="btn btn-secondary">Welcome, ${account.fullName}</span> |
-                <a href="<c:url value='/account/logout.do'/>" class="btn btn-danger">Logout</a>
-            </c:if>
-            |
-            <a href="<c:url value='/cart/index.do'/>" class="btn btn-outline-dark">
-                <c:if test="${cart.total == 0}">
-                    <i class="bi bi-cart"></i>
+        <div class="d-flex justify-content-between align-items-center py-3 border-bottom" style="background-color: black">
+            
+            <div class="d-flex align-items-center">
+                <a href="<c:url value='/'/>">
+                    <img src="<c:url value='/laptops/logo.png'/>" alt="Shop Logo" class="logo">
+                </a>
+                <div class="search-bar">
+                    <form action="<c:url value='/laptop/index.do'/>" class="d-flex">
+                        <input class="form-control me-2"  type="text" name="search" placeholder="Search for laptops..." value="${param.search}">
+                        <button class="search-button" type="submit">Search</button>
+                    </form>  
+                </div>
+            </div>
+                        
+            <div style="padding-right: 20px;">
+                <c:if test="${account == null}">
+                    <a href="#" style="text-decoration: none" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        <img src="<c:url value='/laptops/login.png'/>" style="width: 36px">
+                    </a>
                 </c:if>
-                <c:if test="${cart.total != 0}">
-                    <i class="bi bi-cart-fill"></i>
+                <c:if test="${account != null}">
+                    <span class="btn btn-secondary">Welcome, ${account.fullName}</span> |
+                    <a href="<c:url value='/account/logout.do'/>" class="btn btn-danger">Logout</a>
                 </c:if>
-                <fmt:formatNumber value="${cart.total}" type="currency"/>
-            </a>
+                |
+                <a href="<c:url value='/cart/index.do'/>" class="btn btn-outline-light">
+                    <c:if test="${cart.total == 0}">
+                        <i class="bi bi-cart"></i>
+                    </c:if>
+                    <c:if test="${cart.total != 0}">
+                        <i class="bi bi-cart-fill"></i>
+                    </c:if>
+                    <fmt:formatNumber value="${cart.total}" type="currency"/>
+                </a>
+                
+            </div>
         </div>
-    </div>
-
-    <div class="row my-3">
-        <jsp:include page="/WEB-INF/${controller}/${action}.jsp"></jsp:include>
-    </div>
-</div>
-
-
-       
-
-    </body>
-</html>
-<div class="modal" id="loginModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="<c:url value="/account/login.do"/>">
+        <div class="container">
+            <div class="row my-3">
+                <jsp:include page="/WEB-INF/${controller}/${action}.jsp"></jsp:include>
+                </div>
+            </div>
+        </body>
+    </html>
+    <div class="modal" id="loginModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="<c:url value="/account/login.do"/>">
                 <!-- Modal Header -->
                 <div class="modal-header">
                     <h4 class="modal-title">Login</h4>
