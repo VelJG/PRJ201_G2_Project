@@ -132,7 +132,7 @@
                             <a class="nav-link" href="#about">About Us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#about">Contact</a>
+                            <a class="nav-link" href="#contact">Contact</a>
                         </li>
                     </ul>
                 </nav>
@@ -163,6 +163,7 @@
             </div>
         </div>
 
+        <!-- Footer -->
         <!-- Footer -->
         <div class="footer" id="about">
             <p>Copyright &COPY; by FPT Students</p>

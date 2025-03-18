@@ -5,12 +5,6 @@
 <div class="container">
     <div class="row my-3 d-flex justify-content-between align-items-center">
         <div class="col-auto">
-            <form action="<c:url value='/laptop/index.do'/>" class="d-flex">
-                <input class="form-control me-2" type="text" name="search" placeholder="Search for laptops..." value="${param.search}">
-                <button class="btn btn-primary" type="submit">Search</button>
-            </form>  
-        </div>
-        <div class="col-auto">
             <form action="<c:url value='/laptop/index.do'/>" id="sortForm">
                 <label for="sort" class="form-label">Sort by Price</label>
                 <select name="sort" class="form-select" onchange="document.getElementById('sortForm').submit();">
@@ -39,6 +33,7 @@
                 <div class="card h-100 shadow-sm">
                     <img src="<c:url value='/laptops/${laptop.id}.png'/>" class="card-img-top" alt="Laptop Image">
                     <div class="card-body text-center">
+                        <h5 class="fw-bold">${laptop.name}</h5>
                         <h5 class="text-danger fw-bold">
                             <fmt:formatNumber value="${laptop.price}" type="currency"/>
                         </h5>
