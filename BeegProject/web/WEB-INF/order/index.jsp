@@ -29,7 +29,24 @@
 
             <td><fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy" /></td>
             <td><fmt:formatNumber value="${order.formattedPrice}" type="currency" /></td> 
-            <td>${order.status}</td>
+            <td>
+                <c:if test="${account.id==1}">
+                    <form action="<c:url value="/order/changeStatus.do"/>">
+                        <select name="status" onchange="this.form.submit()">
+                            <option value="Order Placed" ${order.status == 'Order Placed' ? 'selected' : ''}>Order Placed</option>
+                            <option value="Processing" ${order.status == 'Processing' ? 'selected' : ''}>Processing</option>
+                            <option value="Shipped" ${order.status == 'Shipped' ? 'selected' : ''}>Shipped</option>
+                            <option value="Out for Delivery" ${order.status == 'Out for Delivery' ? 'selected' : ''}>Out for Delivery</option>
+                            <option value="Delivered" ${order.status == 'Delivered' ? 'selected' : ''}>Delivered</option>
+                        </select>
+                        <input type="hidden" name="orderId" value="${order.id}">
+                        <input type="hidden" name="id" value="${account.id}">
+                    </form>
+                </c:if>
+                <c:if test="${account.id!=1}">
+                    ${order.status}
+                </c:if>
+            </td>
             <td><a href="<c:url value="/order/detail.do?id=${order.id}"/>" class="btn btn-outline-dark">View details</a></td>
             <td><a href="<c:url value="/order/delete.do?id=${order.id}"/>" class="btn btn-outline-dark">Cancel Order</a></td>
         </tr>

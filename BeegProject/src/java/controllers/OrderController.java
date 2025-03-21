@@ -10,6 +10,10 @@ import db.OrderHeader;
 import db.OrderHeaderFacade;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -48,6 +52,15 @@ public class OrderController extends HttpServlet {
             case "delete":
                 delete(request, response);
                 break;
+            case "changeStatus":
+                changeStatus(request, response);
+                break;
+            case "revenue":
+                revenue(request, response);
+                break;
+            case "revenue_handler":
+                revenue_handler(request, response);
+                break;
         }
     }
 
@@ -55,7 +68,7 @@ public class OrderController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
-            int accountId=Integer.parseInt(request.getParameter("id"));
+            int accountId = Integer.parseInt(request.getParameter("id"));
             List<OrderHeader> orders = oh.getOrders(accountId);
             request.setAttribute("orders", orders);
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
@@ -81,6 +94,7 @@ public class OrderController extends HttpServlet {
         }
 
     }
+
     protected void delete(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -94,6 +108,83 @@ public class OrderController extends HttpServlet {
             e.printStackTrace();
         }
 
+    }
+
+    protected void changeStatus(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try {
+            int orderId = Integer.parseInt(request.getParameter("orderId"));
+            String status = request.getParameter("status");
+            oh.changeStatus(orderId, status);
+            request.getRequestDispatcher("/order/index.do").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    protected void revenue(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+    }
+
+    protected void revenue_handler(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try{
+            String opDate = request.getParameter("opDate");
+        switch (opDate) {
+            case "daily":
+                daily(request, response);
+                break;
+            case "monthly":
+                monthly(request, response);
+                break;
+            case "yearly":
+                yearly(request, response);
+                break;
+        }
+        request.getRequestDispatcher("/order/revenue.do").forward(request, response);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
+    }
+
+    protected void daily(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, ParseException, SQLException {
+        String selectedDate_str = request.getParameter("selectedDate");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date selectedDate = sdf.parse(selectedDate_str);
+        OrderHeaderFacade ohf = new OrderHeaderFacade();
+        double totalRevenue = ohf.daily(selectedDate);
+        request.setAttribute("totalRevenue", totalRevenue);
+        request.getRequestDispatcher("/order/revenue.do").forward(request, response);
+    }
+
+    protected void monthly(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, ParseException, SQLException {
+        String selectedDate_str = request.getParameter("selectedDate");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date selectedDate = sdf.parse(selectedDate_str);
+        OrderHeaderFacade ohf = new OrderHeaderFacade();
+        double totalRevenue = ohf.monthly(selectedDate);
+        request.setAttribute("totalRevenue", totalRevenue);
+        request.getRequestDispatcher("/order/revenue.do").forward(request, response);
+    }
+
+    protected void yearly(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, ParseException, SQLException {
+        String selectedDate_str = request.getParameter("selectedDate");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date selectedDate = sdf.parse(selectedDate_str);
+        OrderHeaderFacade ohf = new OrderHeaderFacade();
+        double totalRevenue = ohf.yearly(selectedDate);
+        request.setAttribute("totalRevenue", totalRevenue);
+        request.getRequestDispatcher("/order/revenue.do").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

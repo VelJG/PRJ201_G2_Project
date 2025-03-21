@@ -71,6 +71,9 @@ public class LaptopController extends HttpServlet {
             case "uploadImage":
                 uploadImage(request, response);
                 break;
+            case "manage":
+                manage(request, response);
+                break;
         }
     }
 
@@ -88,32 +91,32 @@ public class LaptopController extends HttpServlet {
                 page = Integer.parseInt(spage);
             }
             session.setAttribute("page", page);
-            List<Laptop> list = null;
-            String search = request.getParameter("search");
 
-            if (search == null || search.trim().isEmpty()) {
-                String sort = request.getParameter("sort");
-                if (sort != null && !sort.isEmpty()) {
-                    switch (sort) {
-                        case "desc":
-                            list = lf.priceDesc(page, pageSize);
-                            break;
-                        case "asc":
-                            list = lf.priceAsc(page, pageSize);
-                            break;
-                    }
+            String search = request.getParameter("search");
+            String sort = request.getParameter("sort");
+
+            List<Laptop> list;
+            if (search != null && !search.trim().isEmpty()) {
+                list = lf.search(search);
+                request.setAttribute("search", search);
+            } else {
+                if ("desc".equals(sort)) {
+                    list = lf.priceDesc(page, pageSize);
+                } else if ("asc".equals(sort)) {
+                    list = lf.priceAsc(page, pageSize);
                 } else {
                     list = lf.select(page, pageSize);
                 }
-            } else {
-                list = lf.search(search);
-                request.setAttribute("search", search);
             }
+
             request.setAttribute("list", list);
+            request.setAttribute("sort", sort); 
+
 
             int row_count = lf.count();
             int totalPage = (int) Math.ceil((double) row_count / pageSize);
             request.setAttribute("totalPage", totalPage);
+
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -171,7 +174,7 @@ public class LaptopController extends HttpServlet {
                     laptop.setName(name);
                     lf.edit(laptop);
                 case "cancel":
-                    request.getRequestDispatcher("/laptop/index.do").forward(request, response);
+                    request.getRequestDispatcher("/laptop/manage.do").forward(request, response);
                     break;
             }
 
@@ -193,7 +196,7 @@ public class LaptopController extends HttpServlet {
         try {
             int id = Integer.parseInt(request.getParameter("id"));
             lf.delete(id);
-            response.sendRedirect(request.getContextPath() + "/laptop/index.do");
+            response.sendRedirect(request.getContextPath() + "/laptop/manage.do");
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -218,8 +221,12 @@ public class LaptopController extends HttpServlet {
                     laptop.setModel(model);
                     laptop.setName(name);
                     lf.create(laptop);
-                case "cancel":
                     request.getRequestDispatcher("/laptop/uploadImage.do").forward(request, response);
+                    break;
+
+                case "cancel":
+                    request.getRequestDispatcher("/laptop/manage.do").forward(request, response);
+
                     break;
             }
 
@@ -232,6 +239,17 @@ public class LaptopController extends HttpServlet {
             throws ServletException, IOException {
         request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
 
+    }
+
+    protected void manage(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            List<Laptop> list = lf.select();
+            request.setAttribute("list", list);
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -278,9 +296,7 @@ public class LaptopController extends HttpServlet {
         } catch (Exception ex) {
             request.setAttribute("message", "File upload failed: " + ex.getMessage());
         }
-      response.sendRedirect(request.getContextPath() + "/laptop/index.do");
-
-
+        response.sendRedirect(request.getContextPath() + "/laptop/index.do");
 
     }
 

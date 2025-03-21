@@ -64,7 +64,7 @@ public class AccountController extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("message", e.getMessage());
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/laptop/index.do").forward(request, response);
         }
     }
 

@@ -15,15 +15,17 @@
             </form>
         </div>
     </div>
-
-    <c:if test="${account.role=='ADMIN'}">
-        <a href="<c:url value='/laptop/create.do'/>" class="btn btn-success my-3">Add New Laptop</a>
-    </c:if>
     <c:if test="${not empty account}">
         <a href="<c:url value='/order/index.do?id=${account.id}'/>" class="btn btn-outline-dark">
-                View order
-            </a>
+            View order
+        </a>
+        <c:if test="${account.role == 'ADMIN'}">
+            <div class="col-auto">
+                <a href="<c:url value='/order/revenue.do'/>" class="btn btn-success">View Revenue</a>
+            </div>
+        </c:if>
     </c:if>
+
     <div class="row">
         <c:if test="${empty list}">
             <div class="text-center text-danger fs-5">No laptops found.</div>
@@ -66,7 +68,6 @@
             </ul>
         </c:if>
     </div>
-    <h1>TestPush</h1>
 
 </div>
 

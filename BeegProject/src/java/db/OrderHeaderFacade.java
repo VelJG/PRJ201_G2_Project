@@ -7,10 +7,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class OrderHeaderFacade {
-    
+
     public void insert(OrderHeader orderHeader) throws ClassNotFoundException, SQLException {
         Connection con = DBContext.getConnection();
         try {
@@ -31,8 +32,7 @@ public class OrderHeaderFacade {
                     }
                 }
             }
-            String insertOrderDetailSQL = "INSERT OrderDetail VALUES (?, ?, ?, ?)";
-            try (PreparedStatement stm = con.prepareStatement(insertOrderDetailSQL)) {
+            try (PreparedStatement stm = con.prepareStatement("INSERT OrderDetail VALUES (?, ?, ?, ?)")) {
                 for (OrderDetail orderDetail : orderHeader.getDetails()) {
                     stm.setInt(1, orderHeader.getId());
                     stm.setInt(2, orderDetail.getLaptopId());
@@ -53,7 +53,7 @@ public class OrderHeaderFacade {
             con.close(); // Ensure connection is closed
         }
     }
-    
+
     public List<OrderDetail> getDetailById(int orderHeaderId) throws SQLException, ClassNotFoundException {
         Connection con = DBContext.getConnection();
         List<OrderDetail> details = new ArrayList<>();
@@ -72,7 +72,7 @@ public class OrderHeaderFacade {
         }
         return details;
     }
-    
+
     public List<OrderHeader> getOrders(int accountId) throws SQLException, ClassNotFoundException {
         List<OrderHeader> orders = new ArrayList<>();
         Connection con = DBContext.getConnection();
@@ -95,18 +95,68 @@ public class OrderHeaderFacade {
         }
         return orders;
     }
-    
+
     public void remove(int orderHeaderId) throws SQLException {
         Connection con = DBContext.getConnection();
         PreparedStatement stm = con.prepareStatement("delete from OrderDetail where orderHeaderId=?");
         stm.setInt(1, orderHeaderId);
         stm.executeUpdate();
         stm.close();
-        
+
         stm = con.prepareStatement("delete from OrderHeader where id=?");
         stm.setInt(1, orderHeaderId);
         stm.executeUpdate();
         stm.close();
     }
-    
+
+    public void changeStatus(int orderHeaderId, String status) throws SQLException {
+        Connection con = DBContext.getConnection();
+        PreparedStatement stm = con.prepareStatement("update OrderHeader set status=? where id=?");
+        stm.setString(1, status);
+        stm.setInt(2, orderHeaderId);
+        stm.executeUpdate();
+        stm.close();
+    }
+
+    public double daily(Date date) throws SQLException {
+        double totalRevenue = 0;
+        Connection con = DBContext.getConnection();
+        PreparedStatement stm = con.prepareStatement("select SUM(totalPrice) as totalRevenue from OrderHeader where CAST(orderDate as DATE) = ?");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        stm.setString(1, sdf.format(date));
+        ResultSet rs = stm.executeQuery();
+        if (rs.next()) {
+            totalRevenue = rs.getDouble("totalRevenue");
+        }
+        con.close();
+        return totalRevenue;
+    }
+
+    public double monthly(Date date) throws SQLException {
+        double totalRevenue = 0;
+        Connection con = DBContext.getConnection();
+        PreparedStatement stm = con.prepareStatement("select SUM(totalPrice) as totalRevenue from OrderHeader where MONTH(orderDate) = MONTH(?)");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        stm.setString(1, sdf.format(date));
+        ResultSet rs = stm.executeQuery();
+        if (rs.next()) {
+            totalRevenue = rs.getDouble("totalRevenue");
+        }
+        con.close();
+        return totalRevenue;
+    }
+
+    public double yearly(Date date) throws SQLException {
+        double totalRevenue = 0;
+        Connection con = DBContext.getConnection();
+        PreparedStatement stm = con.prepareStatement("select SUM(totalPrice) as totalRevenue from OrderHeader where YEAR(orderDate) = YEAR(?)");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        stm.setString(1, sdf.format(date));
+        ResultSet rs = stm.executeQuery();
+        if (rs.next()) {
+            totalRevenue = rs.getDouble("totalRevenue");
+        }
+        con.close();
+        return totalRevenue;
+    }
 }

@@ -69,7 +69,7 @@ public class Cart {
     
     public void checkout(int accountId) throws ClassNotFoundException, SQLException {
     Date date = new Date();
-    String status = "NEW"; 
+    String status = "Order placed"; 
     OrderHeader orderHeader = new OrderHeader();
     orderHeader.setOrderDate(date);
     orderHeader.setStatus(status);
