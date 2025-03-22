@@ -139,3 +139,31 @@ and open the template in the editor.
     background-color: white !important;
     color: black !important; /* Invert colors on hover */
 }
+
+
+
+/* Ảnh sản phẩm */
+.product-image {
+    max-width: 80%; /* Giới hạn chiều rộng tối đa */
+    height: auto;
+    border-radius: 8px; /* Bo tròn góc ảnh */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+}
+
+/* Khung thông tin sản phẩm */
+.laptopDetail {
+    border-radius: 16px; /* Làm mờ các góc khung */
+    overflow: hidden; /* Giúp các góc luôn mượt mà */
+}
+
+/* Nút Add to Cart */
+.btn-success {
+    background-color: #28a745;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
