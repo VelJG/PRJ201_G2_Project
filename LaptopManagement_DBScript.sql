@@ -92,11 +92,11 @@ INSERT INTO [Laptop] (name, brand, model, price, description) VALUES
 ('ROG Strix G16', 'Asus','G614JU-N3135W', 32990000, 'DDR5, 16GB, Intel Core i7-13650HX (2.6 GHz 24M Cache, up to 4.9 GHz, 14 lõi: 6 P-cores and 8 E-cores), 16 inches');
 GO
 
-INSERT INTO [OrderHeader] (accountId, orderDate) VALUES
-(1, '2025-01-22'),
-(2, '2025-01-23'),
-(1, '2025-02-03'),
-(3, '2025-02-05');
+INSERT INTO [OrderHeader] (accountId, orderDate, totalPrice) VALUES
+(1, '2025-01-22', 50000000),
+(2, '2025-02-23', 40000000),
+(1, '2025-03-03', 34000000),
+(3, '2025-03-05', 60000000);
 GO
 
 INSERT INTO [OrderDetail] (orderHeaderId, laptopId, quantity, price) VALUES
