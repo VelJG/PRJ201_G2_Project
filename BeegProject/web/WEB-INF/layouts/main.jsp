@@ -37,7 +37,7 @@
                 <!-- Middle Section (Logo) -->
                 <div class="col-md-2 text-center">
                     <a href="<c:url value='/'/>">
-                        <img src="<c:url value='/laptops/Laptop_logo3.png'/>" alt="Shop Logo" class="logo" style="width: 180px">
+                        <img src="<c:url value='/laptops/Laptop_logo3.png'/>" alt="Shop Logo" class="logo" style="width: 180px; padding: 0">
                     </a>
                 </div>
 
@@ -59,8 +59,8 @@
                             </a>
                         </c:if>
                         <c:if test="${account != null}">
-                            <span class="btn btn-secondary">Welcome, ${account.fullName}</span> |
-                            <a href="<c:url value='/account/logout.do'/>" class="btn btn-danger">Logout</a>
+                            <span class="btn btn-secondary" >Welcome, ${account.fullName}</span> |
+                            <a href="<c:url value='/account/logout.do'/>" class="btn btn-danger welcome-btn">Logout</a>
                         </c:if>
                         |
                         <a href="<c:url value='/cart/index.do'/>" class="btn btn-outline-light">
@@ -122,40 +122,78 @@
             </div>
         </footer>
 
-        <!-- Login Modal -->
+        <!-- Login and Register Modal -->
         <div class="modal" id="loginModal">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="<c:url value="/account/login.do"/>">
-                        <!-- Modal Header -->
-                        <div class="modal-header">
-                            <h4 class="modal-title">Login</h4>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
+                    <!-- Modal Header with Tabs -->
+                    <div class="modal-header">
+                        <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#loginTab">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#registerTab">Register</a>
+                            </li>
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
 
-                        <!-- Modal Body -->
-                        <div class="modal-body">
-                            <div class="mb-3 mt-3">
-                                <label for="email" class="form-label">Email:</label>
-                                <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+                    <!-- Modal Body with Tabs Content -->
+                    <div class="modal-body">
+                        <div class="tab-content">
+                            <!-- Login Tab -->
+                            <div id="loginTab" class="tab-pane fade show active">
+                                <form action="<c:url value="/account?action=login"/>" method="post">
+                                    <div class="mb-3 mt-3">
+                                        <label for="email" class="form-label">Email:</label>
+                                        <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="pwd" class="form-label">Password:</label>
+                                        <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="password" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Login</button>
+                                </form>
                             </div>
-                            <div class="mb-3">
-                                <label for="pwd" class="form-label">Password:</label>
-                                <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="password">
-                            </div>
-                            <div class="form-check mb-3">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="checkbox" name="remember"> Remember me
-                                </label>
-                            </div>
-                        </div>
 
-                        <!-- Modal Footer -->
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Login</button>
-                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                            <!-- Register Tab -->
+                            <div id="registerTab" class="tab-pane fade">
+                                <form action="<c:url value="/account?action=register"/>" method="post">
+                                    <div class="mb-3 mt-3">
+                                        <label for="fullName" class="form-label">Full Name:</label>
+                                        <input type="text" class="form-control" id="fullName" placeholder="Enter full name" name="fullName" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="emailRegister" class="form-label">Email:</label>
+                                        <input type="email" class="form-control" id="emailRegister" placeholder="Enter email" name="email" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="passwordRegister" class="form-label">Password:</label>
+                                        <input type="password" class="form-control" id="passwordRegister" placeholder="Enter password" name="password" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="confirmPassword" class="form-label">Confirm Password:</label>
+                                        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm password" name="confirmPassword" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="role" class="form-label">Role:</label>
+                                        <select class="form-select" id="role" name="role" required>
+                                            <option value="">Select Role</option>
+                                            <option value="USER">User</option>
+                                            <option value="ADMIN">Admin</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Register</button>
+                                </form>
+                            </div>
                         </div>
-                    </form>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                    </div>
                 </div>
             </div>
         </div>

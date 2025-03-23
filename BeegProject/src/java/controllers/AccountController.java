@@ -24,7 +24,8 @@ import javax.servlet.http.HttpSession;
 public class AccountController extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
      *
      * @param request servlet request
      * @param response servlet response
@@ -36,9 +37,6 @@ public class AccountController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String action = request.getAttribute("action").toString();
         switch (action) {
-            case "login":
-                login(request, response);
-                break;
             case "logout":
                 logout(request, response);
                 break;
@@ -64,7 +62,7 @@ public class AccountController extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("message", e.getMessage());
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/laptop/index.do").forward(request, response);
         }
     }
 
@@ -73,6 +71,38 @@ public class AccountController extends HttpServlet {
         HttpSession session = request.getSession();
         session.invalidate();
         request.getRequestDispatcher("/").forward(request, response);
+    }
+
+    private void register(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            // Lấy thông tin từ form
+            String email = request.getParameter("email");
+            String password = request.getParameter("password");
+            String confirmPassword = request.getParameter("confirmPassword");
+            String fullName = request.getParameter("fullName");
+            String role = request.getParameter("role");
+
+            // Kiểm tra mật khẩu và xác nhận mật khẩu
+            if (!password.equals(confirmPassword)) {
+                throw new RuntimeException("Password and confirm password do not match");
+            }
+
+            // Gọi phương thức register từ AccountFacade
+            AccountFacade af = new AccountFacade();
+            af.register(email, password, fullName, role);
+
+            // Chuyển hướng về trang chính nếu đăng ký thành công
+            response.sendRedirect(request.getContextPath() + "/");
+        } catch (Exception e) {
+            // Hiển thị thông báo lỗi bằng JavaScript alert
+            response.setContentType("text/html;charset=UTF-8");
+            PrintWriter out = response.getWriter();
+            out.println("<script>");
+            out.println("alert('" + e.getMessage().replace("'", "\\'") + "');");
+            out.println("window.location.href='" + request.getContextPath() + "/';");
+            out.println("</script>");
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -101,7 +131,13 @@ public class AccountController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String action = request.getParameter("action");
+
+        if ("register".equals(action)) {
+            register(request, response);
+        } else if ("login".equals(action)) {
+            login(request, response);
+        }
     }
 
     /**

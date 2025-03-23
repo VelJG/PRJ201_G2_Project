@@ -46,7 +46,7 @@ public class AccountFacade {
         stm.setString(2, hashed);
         ResultSet rs = stm.executeQuery();
         while (rs.next()) {
-            account=new Account();
+            account = new Account();
             account.setId(rs.getInt("id"));
             account.setEmail(rs.getString("email"));
             account.setPassword(rs.getString("password"));
@@ -55,5 +55,47 @@ public class AccountFacade {
         }
         return account;
 
+    }
+
+    public void register(String email, String password, String fullName, String role)
+            throws SQLException, NoSuchAlgorithmException {
+        Connection con = null;
+        PreparedStatement checkStmt = null;
+        PreparedStatement insertStmt = null;
+
+        try {
+            con = DBContext.getConnection();
+
+            // Kiểm tra xem email đã tồn tại chưa
+            checkStmt = con.prepareStatement("SELECT COUNT(*) FROM Account WHERE email = ?");
+            checkStmt.setString(1, email);
+            ResultSet rs = checkStmt.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                throw new RuntimeException("Email already exists");
+            }
+
+            // Hash mật khẩu trước khi lưu vào cơ sở dữ liệu
+            String hashedPassword = Hasher.hash(password);
+
+            // Thêm tài khoản mới
+            insertStmt = con.prepareStatement(
+                    "INSERT INTO Account (email, password, fullname, role) VALUES (?, ?, ?, ?)");
+            insertStmt.setString(1, email);
+            insertStmt.setString(2, hashedPassword);
+            insertStmt.setString(3, fullName);
+            insertStmt.setString(4, role);
+            insertStmt.executeUpdate();
+        } finally {
+            // Đảm bảo đóng kết nối và tài nguyên
+            if (checkStmt != null) {
+                checkStmt.close();
+            }
+            if (insertStmt != null) {
+                insertStmt.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
     }
 }
