@@ -1,7 +1,7 @@
-<%-- 
-    Document   : detail
-    Created on : Mar 6, 2025, 9:32:47 PM
-    Author     : AN KHUONG
+<%--
+Document : detail
+Created on : Mar 6, 2025, 9:32:47 PM
+Author : AN KHUONG
 --%>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -9,21 +9,24 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <div class="container">
-    <div class="row detail">
-
-        <div class="col-sm-6">
-            <img src="<c:url value="/laptops/${laptop.id}.png" />" style="width: 80%; height: auto;">
+    <div class="row detail my-5">
+        <!-- Ảnh sản phẩm -->
+        <div class="col-sm-5 text-center p-4"> <!-- Thêm padding -->
+            <img src="<c:url value="/laptops/${laptop.id}.png" />" alt="${laptop.name}" class="product-image">
         </div>
-        <div class="col-sm-6 laptopDetail">
+
+
+        <!-- Thông tin sản phẩm -->
+        <div class="col-sm-7 laptopDetail p-4 bg-light rounded">
             <c:if test="${account.role=='ADMIN'}">
-                ID: ${laptop.id}<br>
+                <p>ID: ${laptop.id}</p>
             </c:if>
-            Name: ${laptop.name} <br>
-            Brand: ${laptop.brand} <br>
-            Model: ${laptop.model} <br>
-            Description: ${laptop.description} <br>
-            Price: <fmt:formatNumber value="${laptop.price}" type="currency"/>
-            <a href="<c:url value="/cart/add.do?id=${laptop.id}"/>" class="btn btn-lg " style="background-color: lightgreen"><i class="bi bi-cart-plus"></i> Add to cart</a>
+            <h2>${laptop.name}</h2>
+            <p><strong>Brand:</strong> ${laptop.brand}</p>
+            <p><strong>Model:</strong> ${laptop.model}</p>
+            <p><strong>Description:</strong> ${laptop.description}</p>
+            <p><strong>Price:</strong> <fmt:formatNumber value="${laptop.price}" type="currency"/></p>
+            <a href="<c:url value="/cart/add.do?id=${laptop.id}"/>" class="btn btn-success btn-lg mt-3">Add to cart <i class="bi bi-cart-plus"></i></a>
         </div>
     </div>
 </div>
