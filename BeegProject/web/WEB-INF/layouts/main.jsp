@@ -36,7 +36,7 @@
                 </div>
 
                 <!-- Middle Section (Logo) -->
-                <div class="col-md-2 text-center">
+                <div class="col-md-2 d-flex justify-content-center">
                     <a href="<c:url value='/'/>">
                         <img src="<c:url value='/laptops/Laptop_logo3.png'/>" alt="Shop Logo" class="logo" style="width: 180px">
                     </a>
