@@ -12,8 +12,14 @@ import java.text.DecimalFormat;
  * @author AN KHUONG
  */
 public class Laptop {
-   private int id;
-   private String name;
+
+    private int id;
+    private String name;
+    private String brand;
+    private String model;
+    private String description;
+    private double price;
+    
 
     public String getName() {
         return name;
@@ -22,9 +28,6 @@ public class Laptop {
     public void setName(String name) {
         this.name = name;
     }
-   private String brand;
-   private String model;
-   private double price;
 
     public String getModel() {
         return model;
@@ -33,7 +36,6 @@ public class Laptop {
     public void setModel(String model) {
         this.model = model;
     }
-   private String description;
 
     public Laptop() {
     }
@@ -69,10 +71,10 @@ public class Laptop {
     public void setDescription(String description) {
         this.description = description;
     }
+
     public String getFormattedPrice() {
-        DecimalFormat df = new DecimalFormat("#0.00"); 
+        DecimalFormat df = new DecimalFormat("#0.00");
         return df.format(price);
     }
-   
-           
+
 }

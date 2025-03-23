@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -74,36 +75,40 @@ public class AccountController extends HttpServlet {
     }
 
     private void register(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            // Lấy thông tin từ form
-            String email = request.getParameter("email");
-            String password = request.getParameter("password");
-            String confirmPassword = request.getParameter("confirmPassword");
-            String fullName = request.getParameter("fullName");
-            String role = request.getParameter("role");
+        throws ServletException, IOException {
+    try {
+        // Lấy thông tin từ form
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String confirmPassword = request.getParameter("confirmPassword");
+        String fullName = request.getParameter("fullName");
+        String role = request.getParameter("role");
 
-            // Kiểm tra mật khẩu và xác nhận mật khẩu
-            if (!password.equals(confirmPassword)) {
-                throw new RuntimeException("Password and confirm password do not match");
-            }
-
-            // Gọi phương thức register từ AccountFacade
-            AccountFacade af = new AccountFacade();
-            af.register(email, password, fullName, role);
-
-            // Chuyển hướng về trang chính nếu đăng ký thành công
-            response.sendRedirect(request.getContextPath() + "/");
-        } catch (Exception e) {
-            // Hiển thị thông báo lỗi bằng JavaScript alert
-            response.setContentType("text/html;charset=UTF-8");
-            PrintWriter out = response.getWriter();
-            out.println("<script>");
-            out.println("alert('" + e.getMessage().replace("'", "\\'") + "');");
-            out.println("window.location.href='" + request.getContextPath() + "/';");
-            out.println("</script>");
+        // Kiểm tra mật khẩu và xác nhận mật khẩu
+        if (!password.equals(confirmPassword)) {
+            throw new RuntimeException("Password and confirm password do not match");
         }
+
+        // Gọi phương thức register từ AccountFacade
+        AccountFacade af = new AccountFacade();
+        af.register(email, password, fullName, role);
+
+        // Lưu thông báo đăng ký thành công vào session
+        HttpSession session = request.getSession();
+        session.setAttribute("registerMessage", "Registration successful. Please log in.");
+
+        // Chuyển hướng về trang chính
+        response.sendRedirect(request.getContextPath() + "/");
+    } catch (Exception e) {
+        // Hiển thị thông báo lỗi bằng JavaScript alert
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        out.println("<script>");
+        out.println("alert('" + e.getMessage().replace("'", "\\'") + "');");
+        out.println("window.location.href='" + request.getContextPath() + "/';");
+        out.println("</script>");
     }
+}
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

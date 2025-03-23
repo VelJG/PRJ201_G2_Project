@@ -15,6 +15,7 @@ Author : AN KHUONG
             <img src="<c:url value="/laptops/${laptop.id}.png" />" alt="${laptop.name}" class="product-image">
         </div>
 
+
         <!-- Thông tin sản phẩm -->
         <div class="col-sm-7 laptopDetail p-4 bg-light rounded">
             <c:if test="${account.role=='ADMIN'}">

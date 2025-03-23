@@ -18,7 +18,7 @@
     <c:forEach var="item" items="${detail}" varStatus="loop">
         <tr>
             <td>${loop.count}</td>
-            <td>  <img src="<c:url value="/laptops/${item.laptopId}.png"/>" alt="" height="60px"/></td>
+            <td>  <img src="<c:url value="/laptops/${item.laptopId}.png"/>" alt="" class="laptop-thumbnail"/></td>
             <td style="text-align: right">
                 <fmt:formatNumber value="${item.price}" type="currency"/>
             </td>

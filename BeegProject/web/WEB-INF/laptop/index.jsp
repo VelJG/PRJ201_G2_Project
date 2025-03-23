@@ -1,9 +1,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
 <div class="container">
     <div class="row my-3 d-flex justify-content-between align-items-center">
+        <!-- Form Sắp Xếp -->
         <div class="col-auto">
             <form action="<c:url value='/laptop/index.do'/>" id="sortForm">
                 <label for="sort" class="form-label">Sort by Price</label>
@@ -14,21 +14,32 @@
                 </select>
             </form>
         </div>
+
+        <!-- Search Bar -->
+        <div class="col-auto ms-auto">
+            <form action="<c:url value='/laptop/index.do'/>" class="d-flex">
+                <input class="form-control me-2" type="text" name="search" placeholder="Search for laptops..." value="${param.search}">
+                <button class="btn btn-dark" type="submit">Search</button>
+            </form>
+        </div>
     </div>
 
-    <c:if test="${account.role=='ADMIN'}">
-        <a href="<c:url value='/laptop/create.do'/>" class="btn btn-success my-3">Add New Laptop</a>
-    </c:if>
     <c:if test="${not empty account}">
         <a href="<c:url value='/order/index.do?id=${account.id}'/>" class="btn btn-outline-dark">
-                View order
-            </a>
+            View order
+        </a>
+        <c:if test="${account.role == 'ADMIN'}">
+            <div class="col-auto">
+                <a href="<c:url value='/order/revenue.do'/>" class="btn btn-success">View Revenue</a>
+            </div>
+        </c:if>
     </c:if>
+
     <div class="row">
         <c:if test="${empty list}">
             <div class="text-center text-danger fs-5">No laptops found.</div>
         </c:if>
-        <c:forEach var="laptop" items="${list}"> 
+        <c:forEach var="laptop" items="${list}">
             <div class="col-md-4 col-lg-3 mb-4">
                 <div class="card h-100 shadow-sm">
                     <img src="<c:url value='/laptops/${laptop.id}.png'/>" class="card-img-top" alt="Laptop Image">
@@ -42,7 +53,8 @@
                 </div>
             </div>
         </c:forEach>
-    </div >
+    </div>
+
     <div class="row my-3 d-flex justify-content-between align-items-center">
         <c:if test="${search == null}">
             <ul class="pagination justify-content-center">
@@ -66,6 +78,4 @@
             </ul>
         </c:if>
     </div>
-
 </div>
-
