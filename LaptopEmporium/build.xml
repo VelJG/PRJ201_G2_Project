@@ -10,7 +10,7 @@
              classpathref="checkstyle.lib.path"/>
 
     <target name="checkstyle" description="Runs Checkstyle analysis on the source code.">
-        <checkstyle config="custom-checkstyle.xml"
+        <checkstyle config="${basedir}/custom-checkstyle.xml"
                     failureProperty="checkstyle.fail"
                     failOnViolation="true">
             <fileset dir="src" includes="**/*.java"/>
