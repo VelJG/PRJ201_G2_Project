@@ -6,6 +6,7 @@
       <root url="jar://$PROJECT_DIR$/build/web/WEB-INF/lib/jstl-impl.jar!/" />
       <root url="jar://$PROJECT_DIR$/build/web/WEB-INF/lib/gson-2.10.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/build/web/WEB-INF/lib/javax.servlet-api-4.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/checkstyle-10.25.0-all.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

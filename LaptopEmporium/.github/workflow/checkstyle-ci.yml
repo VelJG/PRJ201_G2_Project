@@ -1,0 +1,28 @@
+# This is the name of your workflow, which will appear on GitHub.
+name: Checkstyle Quality Check
+
+# This tells GitHub to run the workflow automatically on every 'push' to the repository.
+on: [push]
+
+jobs:
+  # This defines a single job named 'build-and-check'.
+  build-and-check:
+    # The job will run on a fresh virtual machine provided by GitHub.
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checks out your repository's code so the job can access it.
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Step 2: Sets up the Java Development Kit (JDK) because Ant needs it to run.
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # Step 3: Run the 'checkstyle' target from your build.xml file.
+      # Because 'failOnViolation' is true, this step will fail if Checkstyle finds any errors.
+      - name: Run Checkstyle with Ant
+        run: ant checkstyle
