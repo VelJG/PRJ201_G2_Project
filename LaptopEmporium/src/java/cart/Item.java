@@ -46,5 +46,4 @@ public class Item {
     public double getCost(){
         return this.quantity*this.laptop.getPrice();
     }
-
 }

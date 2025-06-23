@@ -42,7 +42,10 @@ public class AccountFacade {
         Connection con = DBContext.getConnection();
         Account account = null;
         String hashed = Hasher.hash(password);
-        PreparedStatement stm = con.prepareStatement("select * from Account where email= ? and password=?");
+        PreparedStatement stm = con.prepareStatement(
+                "select * " +
+                        "from Account " +
+                        "where email= ? and password=?");
         stm.setString(1, email);
         stm.setString(2, hashed);
         ResultSet rs = stm.executeQuery();
