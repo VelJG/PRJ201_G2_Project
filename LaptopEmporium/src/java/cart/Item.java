@@ -33,7 +33,7 @@ public class Item {
     }
 
     public void setLaptop(Laptop laptop) {
-        this.laptop = laptop;
+        this.laptop=laptop;
     }
 
     public int getQuantity() {
