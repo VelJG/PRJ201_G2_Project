@@ -1,1 +1,22 @@
+name: Checkstyle Quality Check
 
+on: [push]
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # This command is crucial because your project is in a sub-folder.
+      # It tells Ant to use the build file inside LaptopEmporium.
+      - name: Run Checkstyle with Ant
+        run: ant -buildfile LaptopEmporium/build.xml checkstyle
